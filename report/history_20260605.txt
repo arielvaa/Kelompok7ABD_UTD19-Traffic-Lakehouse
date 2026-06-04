@@ -163,7 +163,7 @@
   163  cp gold_csv/city_daily/part-*.csv city_daily.csv
   164  cp gold_csv/road_analysis/part-*.csv road_analysis.csv
   165  ls -lh *.csv
-  166  scp -i "/c/Users/arielva/Downloads/vm-bigdata_key (1).pem" azureuser@20.205.136.107:/home/azureuser/project/*.csv /d/Users/arielva/Desktop/
+  166  scp -i "/c/Users/arielva/Downloads/vm-bigdata_key (1).pem" azureuser@IP:/home/azureuser/project/*.csv /d/Users/arielva/Desktop/
   167  ls "/c/Users/arielva/Downloads/" | grep pem
   168  cd ~/project
   169  tree -L 3
@@ -196,6 +196,6 @@
   196  sudo apt install zip -y
   197  zip -r github_project.zip github_project
   198  ls -lh github_project.zip
-  199  scp -i "/c/Users/arielva/Downloads/vm-bigdata_key (1).pem" azureuser@20.205.136.107:/home/azureuser/project/github_project.zip /C/Users/arielva/Desktop/
+  199  scp -i "/c/Users/arielva/Downloads/vm-bigdata_key (1).pem" azureuser@IP:/home/azureuser/project/github_project.zip /C/Users/arielva/Desktop/
   200  tree -L 4 medallion
   201  history > history_20260605.txt
