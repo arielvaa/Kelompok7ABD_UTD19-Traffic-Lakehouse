@@ -1,0 +1,16 @@
+**pycache**/
+*.pyc
+
+*.parquet
+*.crc
+*.log
+
+medallion/
+
+venv/
+bigdata-env/
+
+.vscode/settings.json
+
+.DS_Store
+Thumbs.db

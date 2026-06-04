@@ -1,0 +1,201 @@
+    1  sudo apt update && sudo apt upgrade -y
+    2  sudo apt install openjdk-17-jdk -y
+    3  java -version
+    4  sudo apt install python3-pip python3-venv tree -y
+    5  python3 -m venv bigdata-env
+    6  source bigdata-env/bin/activate
+    7  pip install pyspark delta-spark pandas pyarrow notebook
+    8  mkdir project
+    9  cd project
+   10  mkdir -p medallion/bronze/raw
+   11  mkdir -p medallion/bronze/parquet
+   12  mkdir -p medallion/bronze/delta
+   13  mkdir -p medallion/silver/parquet
+   14  mkdir -p medallion/silver/delta
+   15  mkdir -p medallion/gold/parquet
+   16  mkdir -p medallion/gold/delta
+   17  cd ~/project
+   18  tree -L 3
+   19  ls -lh medallion/bronze/raw
+   20  nano data_quality.py
+   21  python data_quality.py
+   22  ls -lh medallion/bronze/raw
+   23  nano bronze_profile.py
+   24  python bronze_profile.py > bronze_report.txt
+   25  nano bronze_relationship.py
+   26  python bronze_relationship.py
+   27  nano silver_build.py
+   28  free -h
+   29  nproc
+   30  nano silver_parquet.py
+   31  python silver_parquet.py
+   32  rm -rf medallion/silver/parquet/traffic_enriched
+   33  nano silver_parquet.py
+   34  rm -rf silver_parquet.py
+   35  nano silver_parquet.py
+   36  python silver_parquet.py
+   37  du -sh medallion/silver/parquet/traffic_enriched
+   38  find medallion/silver/parquet/traffic_enriched -type f | wc -l
+   39  nano benchmark_read_parquet.py
+   40  python benchmark_read_parquet.py
+   41  nano benchmark_agg_parquet.py
+   42  python benchmark_agg_parquet.py
+   43  nano benchmark_filter_parquet.py
+   44  python benchmark_filter_parquet.py
+   45  nano silver_delta.py
+   46  python silver_delta.py
+   47  pip show delta-spark
+   48  df -h
+   49  du -sh medallion/*
+   50  du -sh medallion/silver/*
+   51  rm -rf medallion/silver/delta/traffic_enriched
+   52  df -h
+   53  rm -rf silver_delta.py
+   54  nano silver_delta.py
+   55  du -sh medallion/silver/*
+   56  rm -rf medallion/silver/delta/traffic_enriched
+   57  du -sh medallion/silver/*
+   58  du -sh medallion/silver/delta*
+   59  python silver_delta.py
+   60  rm -rf medallion/silver/delta/traffic_enriched
+   61  df -h
+   62  python -c "import pyspark; print(pyspark.__version__)"
+   63  df -h
+   64  lsblk
+   65  rm -rf ~/project/medallion/silver/delta/traffic_enriched
+   66  nano silver_delta.py
+   67  rm -rf medallion/silver/delta/traffic_enriched
+   68  python silver_delta.py
+   69  ls
+   70  source ~/bigdata-env/bin/activate
+   71  mv silver_delta.py project/
+   72  cd project
+   73  ls
+   74  cd medallion
+   75  ls
+   76  ...
+   77  cd project
+   78  cd ~/project
+   79  nano silver_delta.py
+   80  rm -rf silver_delta.py
+   81  nano silver_delta.py
+   82  rm -rf medallion/silver/delta/traffic_enriched
+   83  python silver_delta.py
+   84  du -sh medallion/silver/parquet/traffic_enriched
+   85  du -sh medallion/silver/delta/traffic_enriched
+   86  find medallion/silver/parquet/traffic_enriched -type f | wc -l
+   87  find medallion/silver/delta/traffic_enriched -type f | wc -l
+   88  nano benchmark_read_delta.py
+   89  python benchmark_read_delta.py
+   90  nano benchmark_agg_delta.py
+   91  python benchmark_agg_delta.py
+   92  nano benchmark_filter_delta.py
+   93  python benchmark_filter_delta.py
+   94  nano silver_links_parquet.py
+   95  python silver_links_parquet.py
+   96  nano silver_links_delta.py
+   97  python silver_links_delta.py
+   98  ls
+   99  cd medallion/silver/delta
+  100  cd ~/project
+  101  tree medallion/silver
+  102  ls -R medallion/silver
+  103  ls -la medallion/silver
+  104  nano gold_city_daily_parquet.py
+  105  python gold_city_daily_parquet.py
+  106  nano gold_city_summary_parquet.py
+  107  python gold_city_summary_parquet.py
+  108  nano gold_road_analysis_parquet.py
+  109  python gold_road_analysis_parquet.py
+  110  du -sh medallion/gold/*
+  111  nano gold_city_summary_delta.py
+  112  python gold_city_summary_delta.py
+  113  nano delta_history.py
+  114  python delta_history.py
+  115  nano delta_update_demo.py
+  116  python delta_history.py
+  117  nano check_delta_schema.py
+  118  python delta_update_demo.py
+  119  python delta_history.py
+  120  python check_delta_schema.py
+  121  python delta_history.py
+  122  nano delta_time_travel.py
+  123  python delta_time_travel.py
+  124  nano validasi_parquet_count.py
+  125  python validasi_parquet_count.py
+  126  nano validasi_delta_count.py
+  127  python validasi_delta_count.py
+  128  nano validasi_schema.py
+  129  python validasi_schema.py
+  130  nano validasi_missing.py
+  131  python validasi_missing.py
+  132  nano cek_duplicate_detid.py
+  133  python cek_duplicate_detid.py
+  134  nano validasi_city.py
+  135  python validasi_city.py
+  136  find medallion/gold -type d
+  137  nano validasi_gold_count.py
+  138  python validasi_gold_count.py
+  139  from pyspark.sql import SparkSession
+  140  spark = (
+  141  tables = [
+  142  ]
+  143  for table in tables:;      print("\n" + "="*6
+  144  nano validasi_gold_schema.py
+  145  python validasi_gold_schema.py
+  146  nano validasi_gold_sample.py
+  147  python validasi_gold_sample.py
+  148  nano validasi_gold_missing.py
+  149  python validasi_gold_missing.py
+  150  nano validasi_gold_duplicate.py
+  151  python validasi_gold_duplicate.py
+  152  nano validasi_gold_logic.py
+  153  python validasi_gold_logic.py
+  154  nano validasi_gold_city.py
+  155  python validasi_gold_city.py
+  156  nano cek_infinity.py
+  157  python cek_infinity.py
+  158  du -sh ~/project/medallion/gold/parquet/*
+  159  nano export_gold_csv.py
+  160  python export_gold_csv.py
+  161  find gold_csv
+  162  cp gold_csv/city_summary/part-*.csv city_summary.csv
+  163  cp gold_csv/city_daily/part-*.csv city_daily.csv
+  164  cp gold_csv/road_analysis/part-*.csv road_analysis.csv
+  165  ls -lh *.csv
+  166  scp -i "/c/Users/arielva/Downloads/vm-bigdata_key (1).pem" azureuser@20.205.136.107:/home/azureuser/project/*.csv /d/Users/arielva/Desktop/
+  167  ls "/c/Users/arielva/Downloads/" | grep pem
+  168  cd ~/project
+  169  tree -L 3
+  170  cd ~/project
+  171  mkdir github_project
+  172  cp benchmark_*.py github_project/
+  173  cp bronze_profile.py github_project/
+  174  cp bronze_relationship.py github_project/
+  175  cp bronze_report.txt github_project/
+  176  cp cek_duplicate_detid.py github_project/
+  177  cp cek_infinity.py github_project/
+  178  cp check_delta_schema.py github_project/
+  179  cp city_daily.csv github_project/
+  180  cp city_summary.csv github_project/
+  181  cp data_quality.py github_project/
+  182  cp delta_history.py github_project/
+  183  cp delta_time_travel.py github_project/
+  184  cp delta_update_demo.py github_project/
+  185  cp export_gold_csv.py github_project/
+  186  cp gold_city_daily_parquet.py github_project/
+  187  cp gold_city_summary_delta.py github_project/
+  188  cp gold_city_summary_parquet.py github_project/
+  189  cp gold_road_analysis_parquet.py github_project/
+  190  cp silver_*.py github_project/
+  191  cp validasi_*.py github_project/
+  192  cp road_analysis.csv github_project/
+  193  zip -r github_project.zip github_project
+  194  pip install zip
+  195  sudo apt update
+  196  sudo apt install zip -y
+  197  zip -r github_project.zip github_project
+  198  ls -lh github_project.zip
+  199  scp -i "/c/Users/arielva/Downloads/vm-bigdata_key (1).pem" azureuser@20.205.136.107:/home/azureuser/project/github_project.zip /C/Users/arielva/Desktop/
+  200  tree -L 4 medallion
+  201  history > history_20260605.txt
