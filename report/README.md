@@ -2,7 +2,7 @@
 
 ## Lingkungan Pengujian
 
-Seluruh pengujian dilakukan menggunakan:
+Seluruh pengujian dilakukan menggunakan lingkungan sebagai berikut:
 
 | Komponen                | Spesifikasi           |
 | ----------------------- | --------------------- |
@@ -25,9 +25,9 @@ Dataset utama yang diproses:
 
 # Hasil Transformasi Silver Layer
 
-Proses transformasi Silver Layer dilakukan dengan menggabungkan data lalu lintas (`utd19_u.csv`) dengan metadata detector (`detectors_public.csv`) menggunakan atribut `detid`.
+Proses transformasi Silver Layer dilakukan dengan menggabungkan dataset lalu lintas (`utd19_u.csv`) dengan metadata detector (`detectors_public.csv`) menggunakan atribut `detid`.
 
-Relasi:
+Relasi dataset:
 
 ```text
 utd19_u.csv
@@ -37,13 +37,13 @@ utd19_u.csv
 detectors_public.csv
 ```
 
-Dataset `links.csv` tidak digunakan pada proses join utama karena satu `linkid` dapat memiliki banyak waypoint sehingga berpotensi menyebabkan data explosion dan menghasilkan miliaran record setelah join.
+Dataset `links.csv` tidak digunakan pada proses join utama karena satu `linkid` dapat memiliki banyak waypoint sehingga berpotensi menyebabkan data explosion dan menghasilkan miliaran record.
 
 ---
 
-## Tantangan Infrastruktur
+# Tantangan Infrastruktur
 
-Selama pengujian ditemukan bahwa kapasitas storage awal Azure VM tidak cukup untuk menyelesaikan transformasi Silver Layer menggunakan Delta Lake.
+Pada proses implementasi ditemukan bahwa kapasitas storage awal Azure VM tidak mencukupi untuk menjalankan transformasi Delta Lake.
 
 Kondisi awal:
 
@@ -51,28 +51,32 @@ Kondisi awal:
 Storage ≈ 30 GB
 ```
 
-Proses write Delta Lake gagal diselesaikan karena kebutuhan ruang sementara (temporary files), shuffle, dan transaction log.
+Proses write Delta Lake membutuhkan ruang tambahan untuk:
 
-Storage kemudian ditingkatkan menjadi:
+* Temporary files
+* Shuffle process
+* Transaction log (_delta_log)
+
+Sehingga kapasitas storage ditingkatkan menjadi:
 
 ```text
 Storage = 64 GB
 ```
 
-Setelah peningkatan kapasitas disk, seluruh proses transformasi dapat berjalan hingga selesai.
+Setelah peningkatan kapasitas disk, seluruh proses transformasi berhasil diselesaikan.
 
 ---
 
-## Optimasi Partisi
+# Optimasi Partisi
 
-Pengujian menunjukkan bahwa penggunaan jumlah partisi besar menyebabkan:
+Pengujian menunjukkan bahwa penggunaan jumlah partisi yang besar menyebabkan:
 
-* Banyak file kecil (small files problem)
-* Overhead write yang tinggi
-* Penggunaan disk yang meningkat
-* Proses shuffle yang lebih berat
+* Small files problem
+* Overhead write meningkat
+* Konsumsi disk lebih besar
+* Shuffle Spark menjadi lebih berat
 
-Untuk menjaga stabilitas pipeline pada VM 2 vCPU dan 8 GB RAM digunakan:
+Untuk menjaga kestabilan pipeline pada VM 2 vCPU dan RAM 8 GB digunakan:
 
 ```python
 repartition(2)
@@ -125,130 +129,173 @@ Pengurangan ukuran:
 
 ### Temuan
 
-Walaupun Delta Lake menyimpan metadata tambahan melalui transaction log, ukuran akhir dataset justru lebih kecil dibanding Parquet pada eksperimen ini.
+Walaupun Delta Lake menyimpan transaction log dan metadata tambahan, ukuran akhir dataset pada eksperimen ini lebih kecil dibandingkan Apache Parquet.
 
 ---
 
 # Benchmark Performa
 
-## Write Performance
+Untuk meningkatkan reliabilitas hasil, setiap benchmark dijalankan sebanyak **3 iterasi**, kemudian digunakan nilai rata-rata sebagai hasil evaluasi.
 
-Mengukur waktu penulisan hasil Silver Layer.
+## Hasil Benchmark Tiap Iterasi
 
-| Format     | Waktu      |
-| ---------- | ---------- |
-| Parquet    | 890 detik  |
-| Delta Lake | 1029 detik |
-
-Selisih:
-
-```text
-139 detik
-```
-
-Delta Lake membutuhkan waktu sekitar:
-
-```text
-15.62% lebih lama
-```
-
-karena harus membuat transaction log dan metadata tambahan.
+| Metrik                       | Iterasi 1 | Iterasi 2 | Iterasi 3 |
+| ---------------------------- | --------- | --------- | --------- |
+| Read Time Parquet (s)        | 4.84      | 5.44      | 4.06      |
+| Read Time Delta (s)          | 12.59     | 11.94     | 12.34     |
+| Filter Time Parquet (s)      | 4.27      | 5.54      | 4.29      |
+| Filter Time Delta (s)        | 19.87     | 17.73     | 18.19     |
+| Aggregation Time Parquet (s) | 14.22     | 14.62     | 13.18     |
+| Aggregation Time Delta (s)   | 24.72     | 24.24     | 24.91     |
+| Write Time Parquet (s)       | 890.08    | 908.11    | 896.09    |
+| Write Time Delta (s)         | 1029.65   | 1026.57   | 1003.32   |
 
 ---
 
-## Read Performance
+# Hasil Rata-Rata Benchmark
 
-Mengukur waktu pembacaan dataset Silver.
-
-| Format     | Waktu       |
-| ---------- | ----------- |
-| Parquet    | 4.84 detik  |
-| Delta Lake | 12.59 detik |
-
-Selisih:
-
-```text
-7.75 detik
-```
-
-Delta Lake membutuhkan waktu sekitar:
-
-```text
-160.12% lebih lama
-```
-
-dibanding Parquet pada pembacaan sederhana.
+| Metrik               | Parquet | Delta Lake | Unggul  |
+| -------------------- | ------- | ---------- | ------- |
+| Write Time (s)       | 898.09  | 1019.85    | Parquet |
+| Read Time (s)        | 4.78    | 12.29      | Parquet |
+| Filter Time (s)      | 4.70    | 18.60      | Parquet |
+| Aggregation Time (s) | 14.01   | 24.62      | Parquet |
 
 ---
 
-## Filter Performance
+## Analisis Write Performance
 
-Pengujian operasi filter.
+Parquet:
 
-| Format     | Waktu       |
-| ---------- | ----------- |
-| Parquet    | 4.27 detik  |
-| Delta Lake | 19.87 detik |
+```text
+898.09 detik
+```
+
+Delta Lake:
+
+```text
+1019.85 detik
+```
 
 Selisih:
 
 ```text
-15.60 detik
+121.76 detik
 ```
 
-Delta Lake membutuhkan waktu sekitar:
+Delta Lake memerlukan waktu sekitar:
 
 ```text
-365.34% lebih lama
+13.56% lebih lama
 ```
 
-dibanding Parquet.
+karena harus membangun transaction log dan metadata tambahan.
 
 ---
 
-## Aggregation Performance
+## Analisis Read Performance
 
-Pengujian operasi:
+Parquet:
 
-```python
-groupBy()
-agg()
+```text
+4.78 detik
 ```
 
-| Format     | Waktu       |
-| ---------- | ----------- |
-| Parquet    | 14.22 detik |
-| Delta Lake | 24.72 detik |
+Delta Lake:
+
+```text
+12.29 detik
+```
 
 Selisih:
 
 ```text
-10.50 detik
+7.51 detik
 ```
 
 Delta Lake membutuhkan waktu sekitar:
 
 ```text
-73.84% lebih lama
+157.11% lebih lama
 ```
 
-dibanding Parquet.
+dibandingkan Parquet.
+
+---
+
+## Analisis Filter Performance
+
+Parquet:
+
+```text
+4.70 detik
+```
+
+Delta Lake:
+
+```text
+18.60 detik
+```
+
+Selisih:
+
+```text
+13.90 detik
+```
+
+Delta Lake membutuhkan waktu sekitar:
+
+```text
+295.74% lebih lama
+```
+
+dibandingkan Parquet.
+
+---
+
+## Analisis Aggregation Performance
+
+Parquet:
+
+```text
+14.01 detik
+```
+
+Delta Lake:
+
+```text
+24.62 detik
+```
+
+Selisih:
+
+```text
+10.61 detik
+```
+
+Delta Lake membutuhkan waktu sekitar:
+
+```text
+75.73% lebih lama
+```
+
+dibandingkan Parquet.
 
 ---
 
 # Ringkasan Benchmark
 
-| Metrik      | Parquet | Delta Lake | Unggul     |
-| ----------- | ------- | ---------- | ---------- |
-| Write       | 890 s   | 1029 s     | Parquet    |
-| Read        | 4.84 s  | 12.59 s    | Parquet    |
-| Filter      | 4.27 s  | 19.87 s    | Parquet    |
-| Aggregation | 14.22 s | 24.72 s    | Parquet    |
-| Storage     | 2.8 GB  | 2.5 GB     | Delta Lake |
+| Metrik           | Parquet  | Delta Lake | Unggul     |
+| ---------------- | -------- | ---------- | ---------- |
+| Write Time       | 898.09 s | 1019.85 s  | Parquet    |
+| Read Time        | 4.78 s   | 12.29 s    | Parquet    |
+| Filter Time      | 4.70 s   | 18.60 s    | Parquet    |
+| Aggregation Time | 14.01 s  | 24.62 s    | Parquet    |
+| Storage          | 2.8 GB   | 2.5 GB     | Delta Lake |
 
-Secara performa murni, Parquet unggul pada seluruh operasi analitik yang diuji.
+Secara performa komputasi, Apache Parquet unggul pada seluruh operasi analitik yang diuji.
 
-Delta Lake hanya unggul pada efisiensi penyimpanan dan fitur manajemen data.
+Delta Lake unggul pada efisiensi penyimpanan dan fitur manajemen data modern.
 
 ---
 
@@ -264,29 +311,21 @@ _delta_log/
 
 yang menyimpan seluruh histori perubahan tabel.
 
-History yang diperoleh:
-
 | Version | Operation                 |
 | ------- | ------------------------- |
 | 0       | Initial Write             |
 | 1       | Overwrite + Schema Update |
 
-Setiap perubahan tabel tercatat secara permanen dan dapat diaudit kembali.
-
 ---
 
 ## Versioning
-
-Delta Lake menyimpan beberapa versi tabel secara otomatis.
-
-Hasil eksperimen:
 
 | Version | Kondisi               |
 | ------- | --------------------- |
 | 0       | Schema awal           |
 | 1       | Schema setelah update |
 
-Dengan mekanisme ini pengguna dapat mengetahui kapan perubahan dilakukan dan versi apa yang digunakan dalam analisis tertentu.
+Versioning memungkinkan pelacakan perubahan data secara historis.
 
 ---
 
@@ -313,30 +352,26 @@ detector_count
 congestion_index
 ```
 
-Kolom baru berhasil ditambahkan tanpa membuat ulang tabel.
-
-Hal ini menunjukkan kemampuan Delta Lake untuk melakukan schema evolution secara langsung.
+Kolom baru berhasil ditambahkan tanpa membangun ulang tabel.
 
 ---
 
 ## Time Travel
 
-Delta Lake memungkinkan pembacaan data berdasarkan versi tertentu.
-
-Contoh:
+Contoh penggunaan:
 
 ```python
 .option("versionAsOf", 0)
 ```
 
-Kemampuan ini memungkinkan:
+Fitur ini memungkinkan:
 
 * Audit historis
 * Reproduksi eksperimen
 * Rollback data
 * Pelacakan perubahan
 
-Fitur ini tidak tersedia pada Parquet standar.
+Kemampuan tersebut tidak tersedia pada Parquet standar.
 
 ---
 
@@ -346,16 +381,17 @@ Fitur ini tidak tersedia pada Parquet standar.
 
 ### Kelebihan
 
-* Performa baca lebih cepat
-* Performa filter lebih cepat
-* Performa agregasi lebih cepat
+* Write lebih cepat
+* Read lebih cepat
+* Filter lebih cepat
+* Aggregation lebih cepat
 * Overhead metadata rendah
 * Cocok untuk analisis dan dashboard
 
 ### Kekurangan
 
-* Tidak memiliki versioning
 * Tidak memiliki transaction log
+* Tidak memiliki versioning
 * Tidak memiliki time travel
 * Tidak mendukung schema evolution secara native
 
@@ -378,14 +414,14 @@ Fitur ini tidak tersedia pada Parquet standar.
 * Read lebih lambat
 * Filter lebih lambat
 * Aggregation lebih lambat
-* Membutuhkan storage tambahan untuk metadata dan proses transaksi
+* Membutuhkan resource tambahan untuk metadata dan transaction log
 
 ---
 
 # Kesimpulan
 
-Pada lingkungan Azure VM dengan spesifikasi 2 vCPU dan 8 GB RAM, Apache Parquet memberikan performa terbaik untuk workload analitik dan dashboard.
+Pada lingkungan Azure Virtual Machine dengan spesifikasi 2 vCPU dan RAM 8 GB, Apache Parquet memberikan performa terbaik untuk workload analitik dan dashboard.
 
-Namun Delta Lake menawarkan kemampuan manajemen data yang jauh lebih lengkap melalui transaction log, versioning, schema evolution, dan time travel yang sangat penting pada implementasi Lakehouse skala produksi.
+Sebaliknya, Delta Lake menawarkan kemampuan manajemen data yang lebih lengkap melalui transaction log, versioning, schema evolution, dan time travel yang penting pada implementasi Lakehouse skala produksi.
 
-Hasil penelitian menunjukkan bahwa pemilihan format penyimpanan tidak hanya bergantung pada performa, tetapi juga pada kebutuhan pengelolaan dan governance data dalam jangka panjang.
+Hasil penelitian menunjukkan bahwa pemilihan format penyimpanan tidak hanya dipengaruhi oleh performa, tetapi juga oleh kebutuhan pengelolaan, audit, dan governance data dalam jangka panjang.
