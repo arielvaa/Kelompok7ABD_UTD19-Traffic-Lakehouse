@@ -105,7 +105,7 @@ Oleh karena itu:
 
 # Sample Output
 
-Folder `sample_output` berisi contoh dataset hasil akhir dari Gold Layer.
+Pada folder `sample_output` berisi contoh dataset hasil akhir dari Gold Layer.
 
 Dataset ini merupakan hasil agregasi dari lebih dari 134 juta record data mentah menjadi dataset analitik yang siap digunakan untuk dashboard dan Business Intelligence.
 
