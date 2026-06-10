@@ -374,7 +374,7 @@ _delta_log/
 
 ## Versioning
 
-Setiap perubahan data menghasilkan versi baru.
+Setiap perubahan data menghasilkan versi baru secara otomatis.
 
 Contoh:
 
@@ -387,7 +387,7 @@ Contoh:
 
 ## Time Travel
 
-Memungkinkan membaca data pada versi tertentu.
+Memungkinkan pembacaan data pada versi tertentu.
 
 Contoh:
 
@@ -399,7 +399,7 @@ Contoh:
 
 ## Schema Evolution
 
-Penambahan kolom baru tanpa membuat tabel baru.
+Memungkinkan penambahan kolom baru tanpa perlu membuat ulang tabel.
 
 Contoh:
 
@@ -434,6 +434,8 @@ Jumlah record:
 
 - >169 juta baris
 
+sehingga setiap tahap pemrosesan memerlukan manajemen resource yang cermat.
+
 ---
 
 ## Kebutuhan Storage
@@ -444,7 +446,7 @@ Implementasi Delta Lake memerlukan kapasitas penyimpanan lebih besar dibanding P
 - Transaction log
 - Metadata versi
 
-Storage virtual machine perlu ditingkatkan dari sekitar 30 GB menjadi 64 GB agar proses transformasi Delta Lake dapat diselesaikan.
+Kapasitas virtual machine perlu ditingkatkan dari sekitar 30 GB menjadi 64 GB agar proses transformasi Delta Lake dapat diselesaikan sepenuhnya.
 
 ---
 
