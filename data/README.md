@@ -115,7 +115,7 @@ Dataset ini merupakan hasil agregasi dari lebih dari 134 juta record data mentah
 | city_daily.csv    | 59 KB   | 1.378        |
 | road_analysis.csv | 14.4 KB | 315          |
 
-Deskripsi masing-masing output dapat dilihat pada file:
+Deskripsi masing-masing outputnya dapat dilihat pada file:
 
 ```text
 sample_output/README.md
