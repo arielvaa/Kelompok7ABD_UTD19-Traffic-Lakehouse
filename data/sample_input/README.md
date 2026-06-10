@@ -2,7 +2,7 @@
 
 Proyek ini menggunakan **UTD19 (Urban Traffic Data 2019)** yang dikembangkan oleh Loder et al. dari ETH Zurich. Dataset ini berisi data lalu lintas perkotaan dari **40 kota di berbagai negara** yang dikumpulkan melalui berbagai jenis sensor lalu lintas seperti inductive loop detectors, camera detectors, ultrasonic detectors, dan sensor sejenis.
 
-Dataset digunakan untuk membangun arsitektur **Lakehouse berbasis Medallion Architecture (Bronze-Silver-Gold)** serta melakukan perbandingan performa antara **Apache Parquet** dan **Delta Lake**.
+Dataset digunakan untuk membangun arsitektur **Lakehouse berbasis Medallion Architecture (Bronze-Silver-Gold)** serta melakukan perbandingan performa antara **Apache Parquet** dan **Delta Lake**. Perbandingan dilakukan untuk mengevaluasi efisiensi penyimpanan dan kinerja pemrosesan data dalam mendukung analisis data lalu lintas berskala besar.
 
 ### File Dataset
 
