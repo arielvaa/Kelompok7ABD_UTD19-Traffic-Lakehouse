@@ -12,7 +12,7 @@ Implementasi arsitektur Lakehouse menggunakan pendekatan Medallion Architecture 
 
 **SDG 11 – Kota dan Komunitas Berkelanjutan**
 
-Proyek ini berfokus pada pengolahan data lalu lintas perkotaan dari berbagai kota di dunia untuk menghasilkan informasi yang dapat digunakan dalam analisis mobilitas, kemacetan, dan perencanaan transportasi berkelanjutan.
+Proyek ini berfokus pada pengolahan data lalu lintas perkotaan dari berbagai kota di dunia untuk menghasilkan informasi yang bisa digunakan dalam analisis mobilitas, kemacetan, dan perencanaan transportasi berkelanjutan.
 
 ---
 
