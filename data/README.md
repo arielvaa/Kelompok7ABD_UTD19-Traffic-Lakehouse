@@ -127,4 +127,4 @@ sample_output/README.md
 
 Karena ukuran dataset asli mencapai beberapa gigabyte, file mentah tidak disertakan dalam repository ini.
 
-Pengguna yang ingin mereproduksi pipeline secara penuh dapat mengunduh dataset UTD19 dari sumber resminya dan mengikuti langkah-langkah yang dijelaskan pada README utama proyek.
+Pengguna yang ingin mereproduksi pipeline secara menyeluruh dapat mengunduh dataset UTD19 langsung dari sumber resminya dan mengikuti panduan yang telah dijelaskan pada README utama proyek.
