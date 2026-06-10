@@ -4,7 +4,7 @@
 
 ### Mata Kuliah Analisis Big Data
 
-Implementasi arsitektur Lakehouse menggunakan pendekatan Medallion Architecture untuk mengelola dataset lalu lintas perkotaan UTD19 serta melakukan evaluasi performa antara format Apache Parquet dan Delta Lake.
+Implementasi arsitektur Lakehouse menggunakan pendekatan Medallion Architecture untuk mengelola dataset lalu lintas perkotan UTD19 serta melakukan evaluasi performa antara format Apache Parquet dan Delta Lake.
 
 ---
 
