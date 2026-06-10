@@ -108,9 +108,7 @@ Informasi:
 
 Catatan:
 
-Dataset ini tidak digunakan pada proses join utama karena dapat menyebabkan ledakan jumlah data (data explosion) akibat hubungan one-to-many antara link dan detector.
-
-Dataset tetap ditransformasikan ke format Parquet dan Delta Lake sebagai bagian dari implementasi Lakehouse.
+Dataset ini tidak diikutsertakan dalam proses join utama karena berpotensi menyebabkan ledakan jumlah data (data explosion) akibat relasi one-to-many antara link dan detektor. Dataset tetap ditransformasikan ke format Parquet dan Delta Lake sebagai bagian dari implementasi Lakehouse secara lengkap.
 
 ---
 
