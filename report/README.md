@@ -420,12 +420,6 @@ Kemampuan tersebut tidak tersedia pada Parquet standar.
 
 # Kesimpulan
 
-Ini kesimpulannya, tinggal copy-paste ganti yang lama:
-
----
-
-# Kesimpulan
-
 Pada lingkungan Azure Virtual Machine dengan spesifikasi 2 vCPU dan RAM 8 GB, Apache Parquet terbukti memberikan performa yang lebih baik untuk workload analitik dan kebutuhan dashboard secara keseluruhan.
 
 Di sisi lain, Delta Lake menawarkan kemampuan pengelolaan data yang jauh lebih lengkap melalui fitur transaction log, versioning, schema evolution, dan time travel — fitur-fitur yang menjadi kebutuhan mendasar dalam implementasi Lakehouse di lingkungan produksi.
